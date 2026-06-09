@@ -1,9 +1,15 @@
 import express from 'express';
-import pino from 'pino-http';
+import pinoHttp from 'pino-http';
+import pretty from 'pino-pretty';
 import cors from 'cors';
-import { getAllStations, getStationById } from './services/stations.js';
+import cookieParser from 'cookie-parser';
 
 import { getEnvVar } from './utils/getEnvVar.js';
+
+import { errorHandler } from './middlewares/errorHandler.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
+
+import router from './routers/index.js';
 
 const PORT = Number(getEnvVar('PORT', '3000'));
 
@@ -12,51 +18,22 @@ export const startServer = () => {
 
   app.use(express.json());
   app.use(cors());
+  app.use(cookieParser());
 
   app.use(
-    pino({
-      transport: {
-        target: 'pino-pretty',
-      },
+    pinoHttp({
+      stream: pretty({
+        colorize: true,
+        translateTime: 'HH:MM:ss.l',
+        ignore: 'pid,hostname',
+      }),
     }),
   );
 
-  app.use((req, res, next) => {
-    console.log(`Time: ${new Date().toLocaleString()}`);
-    next();
-  });
+  app.use(router);
 
-  app.get('/', (req, res) => {
-    res.json({
-      message: 'Hello GES!',
-    });
-  });
-
-  app.get('/stations', async (req, res) => {
-    const stations = await getAllStations();
-
-    res.status(200).json({
-      data: stations,
-    });
-  });
-
-  app.get('/station/:id', async (req, res, next) => {
-    const { id } = req.params;
-    const station = await getStationById(id);
-    if (!station) {
-      return res.status(404).json({ message: 'Station not found' });
-    }
-    res.status(200).json({
-      data: station,
-    });
-  });
-
-  app.use((err, req, res, next) => {
-    res.status(500).json({
-      message: 'Something went wrong',
-      error: err.message,
-    });
-  });
+  app.use(notFoundHandler);
+  app.use(errorHandler);
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

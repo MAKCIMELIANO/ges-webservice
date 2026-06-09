@@ -1,7 +1,9 @@
 /node_modules
+/config/
 
 .env
 
 .vscode
 .DS_Store
 .idea
+src/config/google-credentials.json

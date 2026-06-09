@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose';
 
-const stationSchema = new Schema(
+const studentsSchema = new Schema(
   {
     name: {
       type: String,
@@ -24,6 +24,11 @@ const stationSchema = new Schema(
       required: true,
       default: false,
     },
+    parentId: {
+      // нова властивість
+      type: Schema.Types.ObjectId,
+      ref: 'users',
+    },
   },
   {
     timestamps: true,
@@ -31,4 +36,4 @@ const stationSchema = new Schema(
   },
 );
 
-export const StationsCollection = model('stations', stationSchema);
+export const StudentsCollection = model('students', studentsSchema);
