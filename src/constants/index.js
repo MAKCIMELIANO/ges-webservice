@@ -10,3 +10,15 @@ export const ROLES = {
   TEACHER: 'teacher',
   PARENT: 'parent',
 };
+
+export const STATIONS = {
+  velikozalis: { name: 'Великозалис' },
+  karachkovtsy: { name: 'Карачковцы' },
+  berezivskges: { name: 'Березовка' },
+  savranskgess: { name: 'Саврань' },
+};
+
+export const ENERGY_DAY_STATUS = {
+  DRAFT: 'draft',
+  COMPLETE: 'complete',
+};
