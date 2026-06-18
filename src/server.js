@@ -1,10 +1,10 @@
 import express from 'express';
-import pinoHttp from 'pino-http';
-import pretty from 'pino-pretty';
+
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
 import { getEnvVar } from './utils/getEnvVar.js';
+import { logger } from './middlewares/logger.js';
 
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
@@ -20,15 +20,7 @@ export const startServer = () => {
   app.use(cors());
   app.use(cookieParser());
 
-  app.use(
-    pinoHttp({
-      stream: pretty({
-        colorize: true,
-        translateTime: 'HH:MM:ss.l',
-        ignore: 'pid,hostname',
-      }),
-    }),
-  );
+  app.use(logger);
 
   app.use(router);
 
