@@ -21,6 +21,12 @@ export const upsertEnergyDaySchema = Joi.object({
   askoForecast: askoForecastSchema,
 });
 
+export const getEnergyMonthQuerySchema = Joi.object({
+  year: Joi.number().integer().min(2000).max(2100).required(),
+  month: Joi.number().integer().min(1).max(12).required(),
+  stationId: Joi.string().valid(...stationIds),
+});
+
 export const getEnergyDayQuerySchema = Joi.object({
   date: Joi.date().iso().required(),
   stationId: Joi.string()

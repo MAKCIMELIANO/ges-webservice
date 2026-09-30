@@ -1,6 +1,7 @@
 import {
   upsertEnergyDay,
   getEnergyDayByDateAndStation,
+  getEnergyMonthSummary,
 } from '../services/energyDay.js';
 import createHttpError from 'http-errors';
 
@@ -20,6 +21,20 @@ export const upsertEnergyDayController = async (req, res) => {
     status,
     message: 'Successfully upserted energy day!',
     data: energyDay,
+  });
+};
+
+export const getEnergyMonthSummaryController = async (req, res) => {
+  const summary = await getEnergyMonthSummary({
+    year: Number(req.query.year),
+    month: Number(req.query.month),
+    stationId: req.query.stationId,
+  });
+
+  res.json({
+    status: 200,
+    message: 'Successfully aggregated energy month!',
+    data: summary,
   });
 };
 
